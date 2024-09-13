@@ -5,6 +5,7 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.example.hexagon.data.model.Person
 import com.example.hexagon.databinding.PersonItemBinding
+import com.example.hexagon.utils.DateUtils.calculateAge
 
 class PersonAdapter : RecyclerView.Adapter<PersonAdapter.PersonViewHolder>() {
 
@@ -34,7 +35,4 @@ class PersonAdapter : RecyclerView.Adapter<PersonAdapter.PersonViewHolder>() {
         notifyDataSetChanged()
     }
 
-    private fun calculateAge(birthDate: String): Int {
-        return 30
-    }
 }
