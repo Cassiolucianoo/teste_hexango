@@ -26,6 +26,7 @@ class PersonRepository(context: Context) {
             put("birthDate", person.birthDate)
             put("cpf", person.cpf)
             put("city", person.city)
+            put("photo", person.photo)
             put("isActive", if (person.isActive) 1 else 0)
         }
         db.writableDatabase.update("persons", values, "id = ?", arrayOf(person.id.toString()))

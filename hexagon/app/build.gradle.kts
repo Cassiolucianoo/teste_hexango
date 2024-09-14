@@ -101,4 +101,9 @@ dependencies {
     // Compose Testing
     debugImplementation("androidx.compose.ui:ui-tooling:1.4.3")
     androidTestImplementation("androidx.compose.ui:ui-test-junit4:1.4.3")
+
+
+
+    implementation ("com.github.bumptech.glide:glide:4.12.0")
+    annotationProcessor ("com.github.bumptech.glide:compiler:4.12.0")
 }

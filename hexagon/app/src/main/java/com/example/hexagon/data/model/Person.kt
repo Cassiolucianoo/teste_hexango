@@ -11,5 +11,5 @@ data class Person(
     val cpf: String,
     val city: String,
     val isActive: Boolean,
-    val photo: String = ""
+    val photo: String
 ) : Parcelable

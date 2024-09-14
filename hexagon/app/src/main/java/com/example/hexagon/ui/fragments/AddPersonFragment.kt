@@ -4,12 +4,11 @@ import android.app.Activity
 import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
-import android.text.Editable
-import android.text.TextWatcher
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
@@ -19,6 +18,7 @@ import com.example.hexagon.data.repository.PersonRepository
 import com.example.hexagon.databinding.FragmentAddPersonBinding
 import com.example.hexagon.ui.main.MainViewModel
 import com.example.hexagon.ui.main.MainViewModelFactory
+import com.example.hexagon.utils.DateInputMask
 import java.io.File
 import java.io.FileOutputStream
 import java.io.InputStream
@@ -30,6 +30,20 @@ class AddPersonFragment : Fragment() {
 
     private lateinit var viewModel: MainViewModel
     private var selectedImageUri: Uri? = null
+
+
+    private val pickImageLauncher = registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
+        if (result.resultCode == Activity.RESULT_OK) {
+            val imageUri = result.data?.data
+            if (imageUri != null) {
+                val savedImagePath = saveImageToInternalStorage(imageUri)
+                if (savedImagePath != null) {
+                    selectedImageUri = Uri.fromFile(File(savedImagePath))
+                    binding.ivPhoto.setImageURI(selectedImageUri)
+                }
+            }
+        }
+    }
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -46,25 +60,25 @@ class AddPersonFragment : Fragment() {
         val viewModelFactory = MainViewModelFactory(repository)
         viewModel = viewModels<MainViewModel> { viewModelFactory }.value
 
-        setupInputMasks()
-
+        // Aplicar a máscara de data
+        DateInputMask.applyDateMask(binding.etBirthDate)
 
         binding.btnSelectPhoto.setOnClickListener {
             openGallery()
         }
 
-
         binding.btnSave.setOnClickListener {
             if (validateInputs()) {
+                val photoPath = selectedImageUri?.let { saveImageToInternalStorage(it) } ?: ""
                 val newPerson = Person(
                     id = 0,
                     name = binding.etName.text.toString(),
                     birthDate = binding.etBirthDate.text.toString(),
                     cpf = binding.etCpf.text.toString(),
                     city = binding.etCity.text.toString(),
+                    photo = photoPath,
                     isActive = binding.switchActive.isChecked
                 )
-
 
                 viewModel.addPerson(newPerson)
 
@@ -75,72 +89,10 @@ class AddPersonFragment : Fragment() {
         }
     }
 
-    private fun setupInputMasks() {
-
-        binding.etCpf.addTextChangedListener(object : TextWatcher {
-            override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
-
-            override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {}
-
-            override fun afterTextChanged(s: Editable?) {
-                s?.let {
-                    if (it.length > 11) {
-                        binding.etCpf.setText(it.subSequence(0, 11))
-                        binding.etCpf.setSelection(11)
-                    }
-                }
-            }
-        })
-
-
-        binding.etBirthDate.addTextChangedListener(object : TextWatcher {
-            var isUpdating = false
-            var oldText = ""
-
-            override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
-
-            override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {}
-
-            override fun afterTextChanged(s: Editable?) {
-                if (isUpdating) {
-                    isUpdating = false
-                    return
-                }
-
-                val str = s.toString().replace(Regex("[^\\d]"), "")
-                val newStr = when {
-                    str.length > 8 -> oldText
-                    str.length > 4 -> "${str.substring(0, 2)}/${str.substring(2, 4)}/${str.substring(4)}"
-                    str.length > 2 -> "${str.substring(0, 2)}/${str.substring(2)}"
-                    else -> str
-                }
-
-                isUpdating = true
-                oldText = newStr
-                binding.etBirthDate.setText(newStr)
-                binding.etBirthDate.setSelection(newStr.length)
-            }
-        })
-    }
-
     private fun openGallery() {
         val intent = Intent(Intent.ACTION_PICK)
         intent.type = "image/*"
-        startActivityForResult(intent, GALLERY_REQUEST_CODE)
-    }
-
-    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
-        super.onActivityResult(requestCode, resultCode, data)
-        if (requestCode == GALLERY_REQUEST_CODE && resultCode == Activity.RESULT_OK) {
-            val imageUri = data?.data
-            if (imageUri != null) {
-                val savedImagePath = saveImageToInternalStorage(imageUri)
-                if (savedImagePath != null) {
-                    selectedImageUri = Uri.fromFile(File(savedImagePath))
-                    binding.ivPhoto.setImageURI(selectedImageUri)
-                }
-            }
-        }
+        pickImageLauncher.launch(intent) // Usamos o launcher em vez do startActivityForResult
     }
 
     private fun saveImageToInternalStorage(uri: Uri): String? {
@@ -187,9 +139,5 @@ class AddPersonFragment : Fragment() {
     override fun onDestroyView() {
         super.onDestroyView()
         _binding = null
-    }
-
-    companion object {
-        const val GALLERY_REQUEST_CODE = 1001
     }
 }

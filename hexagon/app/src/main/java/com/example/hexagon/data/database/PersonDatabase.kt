@@ -39,7 +39,6 @@ class PersonDatabase(context: Context) : SQLiteOpenHelper(context, DATABASE_NAME
         db.close()
     }
 
-
     fun getActivePersons(): List<Person> {
         val personList = mutableListOf<Person>()
         val selectQuery = "SELECT * FROM $TABLE_PERSONS WHERE $KEY_IS_ACTIVE = 1"
@@ -48,7 +47,7 @@ class PersonDatabase(context: Context) : SQLiteOpenHelper(context, DATABASE_NAME
         if (cursor.moveToFirst()) {
             do {
                 val person = Person(
-                    id = cursor.getInt(cursor.getColumnIndexOrThrow(KEY_ID)), // Passa o ID aqui
+                    id = cursor.getInt(cursor.getColumnIndexOrThrow(KEY_ID)),
                     name = cursor.getString(cursor.getColumnIndexOrThrow(KEY_NAME)),
                     birthDate = cursor.getString(cursor.getColumnIndexOrThrow(KEY_BIRTH_DATE)),
                     cpf = cursor.getString(cursor.getColumnIndexOrThrow(KEY_CPF)),
@@ -59,27 +58,12 @@ class PersonDatabase(context: Context) : SQLiteOpenHelper(context, DATABASE_NAME
                 personList.add(person)
             } while (cursor.moveToNext())
         }
-
         cursor.close()
         db.close()
         return personList
     }
 
-    fun updatePerson(person: Person) {
-        val db = this.writableDatabase
-        val values = ContentValues().apply {
-            put(KEY_NAME, person.name)
-            put(KEY_BIRTH_DATE, person.birthDate)
-            put(KEY_CPF, person.cpf)
-            put(KEY_CITY, person.city)
-            put(KEY_IS_ACTIVE, if (person.isActive) 1 else 0)
-        }
-
-        db.update(TABLE_PERSONS, values, "$KEY_ID = ?", arrayOf(person.id.toString()))
-        db.close()
-    }
-
-
+    // Função getInactivePersons implementada corretamente
     fun getInactivePersons(): List<Person> {
         val personList = mutableListOf<Person>()
         val selectQuery = "SELECT * FROM $TABLE_PERSONS WHERE $KEY_IS_ACTIVE = 0"
@@ -88,18 +72,17 @@ class PersonDatabase(context: Context) : SQLiteOpenHelper(context, DATABASE_NAME
         if (cursor.moveToFirst()) {
             do {
                 val person = Person(
-                    id = cursor.getInt(cursor.getColumnIndexOrThrow(KEY_ID)), // Passa o ID aqui
+                    id = cursor.getInt(cursor.getColumnIndexOrThrow(KEY_ID)),
                     name = cursor.getString(cursor.getColumnIndexOrThrow(KEY_NAME)),
                     birthDate = cursor.getString(cursor.getColumnIndexOrThrow(KEY_BIRTH_DATE)),
                     cpf = cursor.getString(cursor.getColumnIndexOrThrow(KEY_CPF)),
                     city = cursor.getString(cursor.getColumnIndexOrThrow(KEY_CITY)),
                     photo = cursor.getString(cursor.getColumnIndexOrThrow(KEY_PHOTO)),
-                    isActive = cursor.getInt(cursor.getColumnIndexOrThrow(KEY_IS_ACTIVE)) == 1
+                    isActive = cursor.getInt(cursor.getColumnIndexOrThrow(KEY_IS_ACTIVE)) == 0
                 )
                 personList.add(person)
             } while (cursor.moveToNext())
         }
-
         cursor.close()
         db.close()
         return personList
