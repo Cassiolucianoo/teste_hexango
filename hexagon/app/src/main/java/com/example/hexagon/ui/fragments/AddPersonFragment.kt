@@ -57,7 +57,7 @@ class AddPersonFragment : Fragment() {
         binding.btnSave.setOnClickListener {
             if (validateInputs()) {
                 val newPerson = Person(
-                    id = 0, 
+                    id = 0,
                     name = binding.etName.text.toString(),
                     birthDate = binding.etBirthDate.text.toString(),
                     cpf = binding.etCpf.text.toString(),
