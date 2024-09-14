@@ -3,12 +3,12 @@ plugins {
     id("org.jetbrains.kotlin.android")
     id("kotlin-kapt")
     id("kotlin-parcelize")
-    id("androidx.navigation.safeargs.kotlin") version "2.8.0"
+    id("androidx.navigation.safeargs.kotlin")
 }
 
 android {
     namespace = "com.example.hexagon"
-    compileSdk = 35
+    compileSdk = 34
 
     defaultConfig {
         applicationId = "com.example.hexagon"
@@ -29,16 +29,29 @@ android {
             )
         }
     }
-    buildFeatures {
-        viewBinding = true // Habilitar View Binding
-    }
+
     compileOptions {
-        sourceCompatibility = JavaVersion.VERSION_1_8
-        targetCompatibility = JavaVersion.VERSION_1_8
+        sourceCompatibility = JavaVersion.VERSION_17
+        targetCompatibility = JavaVersion.VERSION_17
     }
+
     kotlinOptions {
-        jvmTarget = "1.8"
+        jvmTarget = "17"
     }
+
+    buildFeatures {
+        viewBinding = true
+    }
+}
+
+kotlin {
+    jvmToolchain {
+        languageVersion.set(JavaLanguageVersion.of(17)) // Configuração do Java Toolchain
+    }
+}
+
+tasks.withType<JavaCompile> {
+    options.compilerArgs.addAll(listOf("--release", "17"))
 }
 
 dependencies {
@@ -49,6 +62,7 @@ dependencies {
     implementation("androidx.constraintlayout:constraintlayout:2.1.4")
     implementation("androidx.navigation:navigation-fragment-ktx:2.6.0")
     implementation("androidx.navigation:navigation-ui-ktx:2.6.0")
+
     // Gson for JSON parsing
     implementation("com.google.code.gson:gson:2.9.0")
 

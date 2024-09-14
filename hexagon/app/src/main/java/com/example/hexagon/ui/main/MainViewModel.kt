@@ -20,35 +20,31 @@ class MainViewModel(private val repository: PersonRepository) : ViewModel() {
         getActivePersons()
     }
 
-    // Buscar pessoas ativas do repositório
     fun getActivePersons() {
         viewModelScope.launch {
-            _activePersons.value = repository.getActivePersons() // Assíncrono
+            _activePersons.value = repository.getActivePersons()
         }
 
     }
 
-    // Buscar pessoas inativas do repositório
     fun getInactivePersons() {
         viewModelScope.launch {
-            _inactivePersons.value = repository.getInactivePersons() // Assíncrono
+            _inactivePersons.value = repository.getInactivePersons()
         }
 
     }
 
-    // Adicionar uma nova pessoa e atualizar a lista
     fun addPerson(person: Person) {
         viewModelScope.launch {
-            repository.addPerson(person) // Assíncrono
-            getActivePersons() // Atualiza a lista após a inserção
+            repository.addPerson(person)
+            getActivePersons()
         }
     }
 
-    // Atualizar uma pessoa e atualizar a lista
     fun updatePerson(person: Person) {
         viewModelScope.launch {
-            repository.updatePerson(person) // Assíncrono
-            getActivePersons() // Atualiza a lista após a atualização
+            repository.updatePerson(person)
+            getActivePersons()
         }
     }
 }

@@ -5,14 +5,14 @@ pluginManagement {
         gradlePluginPortal()
     }
 }
+
 dependencyResolutionManagement {
     repositoriesMode.set(RepositoriesMode.FAIL_ON_PROJECT_REPOS)
     repositories {
-        google()
+        google() // Defina aqui os repositórios que serão utilizados
         mavenCentral()
     }
 }
 
 rootProject.name = "hexagon"
 include(":app")
- 
