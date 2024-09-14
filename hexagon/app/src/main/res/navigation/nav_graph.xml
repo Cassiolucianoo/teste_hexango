@@ -1,4 +1,3 @@
-<?xml version="1.0" encoding="utf-8"?>
 <navigation xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
@@ -9,9 +8,25 @@
         android:name="com.example.hexagon.ui.fragments.ListFragment"
         android:label="List Fragment"
         tools:layout="@layout/fragment_list">
+
         <action
             android:id="@+id/action_listFragment_to_addPersonFragment"
             app:destination="@id/addPersonFragment" />
+
+        <action
+            android:id="@+id/action_listFragment_to_inactiveListFragment"
+            app:destination="@id/inactiveListFragment" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/inactiveListFragment"
+        android:name="com.example.hexagon.ui.fragments.InactiveListFragment"
+        android:label="Inactive List Fragment"
+        tools:layout="@layout/fragment_inactive_list">
+
+        <action
+            android:id="@+id/action_inactiveListFragment_to_listFragment"
+            app:destination="@id/listFragment" />
     </fragment>
 
     <fragment
@@ -19,6 +34,7 @@
         android:name="com.example.hexagon.ui.fragments.AddPersonFragment"
         android:label="Add Person Fragment"
         tools:layout="@layout/fragment_add_person">
+
         <action
             android:id="@+id/action_addPersonFragment_to_listFragment"
             app:destination="@id/listFragment" />

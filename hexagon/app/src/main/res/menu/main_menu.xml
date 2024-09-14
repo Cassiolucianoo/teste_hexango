@@ -1,0 +1,17 @@
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+    <item
+        android:id="@+id/menu_overflow"
+        android:title="Opções"
+        android:icon="@drawable/baseline_menu_24"
+        app:showAsAction="always">
+        <menu>
+            <item
+                android:id="@+id/menu_active"
+                android:title="Lista Ativos" />
+            <item
+                android:id="@+id/menu_inactive"
+                android:title="Lista Inativos" />
+        </menu>
+    </item>
+</menu>

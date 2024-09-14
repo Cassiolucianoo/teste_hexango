@@ -1,10 +1,14 @@
 package com.example.hexagon.ui.main
 
+import android.net.Uri
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
+import com.example.hexagon.R
 import com.example.hexagon.data.model.Person
 import com.example.hexagon.databinding.PersonItemBinding
+import com.example.hexagon.utils.DateUtils.calculateAge
+import java.io.File
 
 class PersonAdapter : RecyclerView.Adapter<PersonAdapter.PersonViewHolder>() {
 
@@ -14,6 +18,17 @@ class PersonAdapter : RecyclerView.Adapter<PersonAdapter.PersonViewHolder>() {
         fun bind(person: Person) {
             binding.tvName.text = person.name
             binding.tvAge.text = calculateAge(person.birthDate).toString()
+
+            if (person.photo.isNotEmpty()) {
+                val file = File(person.photo)
+                if (file.exists()) {
+                    binding.personPhoto.setImageURI(Uri.fromFile(file))
+                } else {
+                    binding.personPhoto.setImageResource(R.drawable.baseline_person_24)
+                }
+            } else {
+                binding.personPhoto.setImageResource(R.drawable.baseline_person_24)
+            }
         }
     }
 
@@ -32,9 +47,5 @@ class PersonAdapter : RecyclerView.Adapter<PersonAdapter.PersonViewHolder>() {
     fun submitList(list: List<Person>) {
         personList = list
         notifyDataSetChanged()
-    }
-
-    private fun calculateAge(birthDate: String): Int {
-        return 30
     }
 }

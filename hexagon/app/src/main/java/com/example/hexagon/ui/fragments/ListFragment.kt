@@ -41,8 +41,11 @@ class ListFragment : Fragment() {
         binding.recyclerView.layoutManager = LinearLayoutManager(context)
         binding.recyclerView.adapter = adapter
 
-        viewModel.persons.observe(viewLifecycleOwner) { persons ->
-            adapter.submitList(persons)
+
+        viewModel.activePersons.observe(viewLifecycleOwner) { persons ->
+            persons?.let {
+                adapter.submitList(it)
+            }
         }
 
         binding.fabAdd.setOnClickListener {
