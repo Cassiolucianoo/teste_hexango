@@ -29,4 +29,9 @@ class MainViewModel(private val repository: PersonRepository) : ViewModel() {
         repository.addPerson(person)
         getActivePersons()
     }
+
+    fun updatePerson(person: Person) {
+        repository.updatePerson(person)
+        getActivePersons()
+    }
 }

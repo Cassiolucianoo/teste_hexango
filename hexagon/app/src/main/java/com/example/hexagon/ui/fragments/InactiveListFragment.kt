@@ -35,10 +35,12 @@ class InactiveListFragment : Fragment() {
         val viewModelFactory = MainViewModelFactory(repository)
         viewModel = ViewModelProvider(this, viewModelFactory).get(MainViewModel::class.java)
 
-        val adapter = PersonAdapter()
+        val adapter = PersonAdapter { person ->
+
+        }
+
         binding.recyclerView.layoutManager = LinearLayoutManager(context)
         binding.recyclerView.adapter = adapter
-
 
         viewModel.inactivePersons.observe(viewLifecycleOwner) { persons ->
             persons?.let {

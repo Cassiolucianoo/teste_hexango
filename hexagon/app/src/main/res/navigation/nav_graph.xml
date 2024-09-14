@@ -16,6 +16,11 @@
         <action
             android:id="@+id/action_listFragment_to_inactiveListFragment"
             app:destination="@id/inactiveListFragment" />
+
+        <!-- Definindo a ação para editar pessoa -->
+        <action
+            android:id="@+id/action_listFragment_to_personEditFragment"
+            app:destination="@id/personEditFragment" />
     </fragment>
 
     <fragment
@@ -38,6 +43,15 @@
         <action
             android:id="@+id/action_addPersonFragment_to_listFragment"
             app:destination="@id/listFragment" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/personEditFragment"
+        android:name="com.example.hexagon.ui.fragments.PersonEditFragment"
+        tools:layout="@layout/fragment_person_editl">
+        <argument
+            android:name="person"
+            app:argType="com.example.hexagon.data.model.Person" />
     </fragment>
 
 </navigation>

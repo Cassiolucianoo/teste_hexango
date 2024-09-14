@@ -37,10 +37,13 @@ class ListFragment : Fragment() {
         val viewModelFactory = MainViewModelFactory(repository)
         viewModel = ViewModelProvider(this, viewModelFactory).get(MainViewModel::class.java)
 
-        val adapter = PersonAdapter()
+        val adapter = PersonAdapter { person ->
+            val action = ListFragmentDirections.actionListFragmentToPersonEditFragment(person)
+            findNavController().navigate(action)
+        }
+
         binding.recyclerView.layoutManager = LinearLayoutManager(context)
         binding.recyclerView.adapter = adapter
-
 
         viewModel.activePersons.observe(viewLifecycleOwner) { persons ->
             persons?.let {

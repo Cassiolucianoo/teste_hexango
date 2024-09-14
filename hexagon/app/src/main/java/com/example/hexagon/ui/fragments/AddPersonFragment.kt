@@ -56,16 +56,18 @@ class AddPersonFragment : Fragment() {
 
         binding.btnSave.setOnClickListener {
             if (validateInputs()) {
-                val person = Person(
+                val newPerson = Person(
+                    id = 0, 
                     name = binding.etName.text.toString(),
                     birthDate = binding.etBirthDate.text.toString(),
                     cpf = binding.etCpf.text.toString(),
                     city = binding.etCity.text.toString(),
-                    photo = selectedImageUri?.path ?: "",
                     isActive = binding.switchActive.isChecked
                 )
 
-                viewModel.addPerson(person)
+
+                viewModel.addPerson(newPerson)
+
                 Toast.makeText(context, "Person added", Toast.LENGTH_SHORT).show()
                 clearInputs()
                 findNavController().navigate(R.id.action_addPersonFragment_to_listFragment)
