@@ -8,7 +8,6 @@ import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
-import com.example.hexagon.R
 import com.example.hexagon.data.repository.PersonRepository
 import com.example.hexagon.databinding.FragmentListBinding
 import com.example.hexagon.ui.main.MainViewModel
@@ -21,6 +20,7 @@ class ListFragment : Fragment() {
     private val binding get() = _binding!!
 
     private lateinit var viewModel: MainViewModel
+    private lateinit var adapter: PersonAdapter
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -37,10 +37,13 @@ class ListFragment : Fragment() {
         val viewModelFactory = MainViewModelFactory(repository)
         viewModel = ViewModelProvider(this, viewModelFactory).get(MainViewModel::class.java)
 
-        val adapter = PersonAdapter()
+        adapter = PersonAdapter { person ->
+            val action = ListFragmentDirections.actionListFragmentToPersonEditFragment(person)
+            findNavController().navigate(action)
+        }
+
         binding.recyclerView.layoutManager = LinearLayoutManager(context)
         binding.recyclerView.adapter = adapter
-
 
         viewModel.activePersons.observe(viewLifecycleOwner) { persons ->
             persons?.let {
@@ -49,8 +52,13 @@ class ListFragment : Fragment() {
         }
 
         binding.fabAdd.setOnClickListener {
-            findNavController().navigate(R.id.action_listFragment_to_addPersonFragment)
+            findNavController().navigate(com.example.hexagon.R.id.action_listFragment_to_addPersonFragment)
         }
+    }
+
+    override fun onResume() {
+        super.onResume()
+        viewModel.getActivePersons()
     }
 
     override fun onDestroyView() {

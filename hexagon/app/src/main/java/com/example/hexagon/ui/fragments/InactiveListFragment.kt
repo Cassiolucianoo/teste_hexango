@@ -6,7 +6,9 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
+import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.example.hexagon.data.model.Person
 import com.example.hexagon.data.repository.PersonRepository
 import com.example.hexagon.databinding.FragmentListBinding
 import com.example.hexagon.ui.main.MainViewModel
@@ -19,6 +21,7 @@ class InactiveListFragment : Fragment() {
     private val binding get() = _binding!!
 
     private lateinit var viewModel: MainViewModel
+    private lateinit var adapter: PersonAdapter
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -35,17 +38,23 @@ class InactiveListFragment : Fragment() {
         val viewModelFactory = MainViewModelFactory(repository)
         viewModel = ViewModelProvider(this, viewModelFactory).get(MainViewModel::class.java)
 
-        val adapter = PersonAdapter()
+        adapter  = PersonAdapter { person ->
+            val action = InactiveListFragmentDirections.actionInactiveListFragmentToPersonEditFragment(person)
+            findNavController().navigate(action)
+        }
+
         binding.recyclerView.layoutManager = LinearLayoutManager(context)
         binding.recyclerView.adapter = adapter
-
 
         viewModel.inactivePersons.observe(viewLifecycleOwner) { persons ->
             persons?.let {
                 adapter.submitList(it)
             }
         }
+    }
 
+    override fun onResume() {
+        super.onResume()
         viewModel.getInactivePersons()
     }
 

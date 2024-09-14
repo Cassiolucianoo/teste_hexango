@@ -10,7 +10,7 @@ import com.example.hexagon.databinding.PersonItemBinding
 import com.example.hexagon.utils.DateUtils.calculateAge
 import java.io.File
 
-class PersonAdapter : RecyclerView.Adapter<PersonAdapter.PersonViewHolder>() {
+class PersonAdapter(private val onItemClick: (Person) -> Unit) : RecyclerView.Adapter<PersonAdapter.PersonViewHolder>() {
 
     private var personList = emptyList<Person>()
 
@@ -28,6 +28,10 @@ class PersonAdapter : RecyclerView.Adapter<PersonAdapter.PersonViewHolder>() {
                 }
             } else {
                 binding.personPhoto.setImageResource(R.drawable.baseline_person_24)
+            }
+
+            binding.root.setOnClickListener {
+                onItemClick(person)
             }
         }
     }

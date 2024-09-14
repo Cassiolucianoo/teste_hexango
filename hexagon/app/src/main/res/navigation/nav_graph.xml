@@ -6,7 +6,7 @@
     <fragment
         android:id="@+id/listFragment"
         android:name="com.example.hexagon.ui.fragments.ListFragment"
-        android:label="List Fragment"
+        android:label="Lista ativos"
         tools:layout="@layout/fragment_list">
 
         <action
@@ -16,28 +16,45 @@
         <action
             android:id="@+id/action_listFragment_to_inactiveListFragment"
             app:destination="@id/inactiveListFragment" />
+
+        <action
+            android:id="@+id/action_listFragment_to_personEditFragment"
+            app:destination="@id/personEditFragment" />
     </fragment>
 
     <fragment
         android:id="@+id/inactiveListFragment"
         android:name="com.example.hexagon.ui.fragments.InactiveListFragment"
-        android:label="Inactive List Fragment"
+        android:label="Lista inativos "
         tools:layout="@layout/fragment_inactive_list">
 
         <action
             android:id="@+id/action_inactiveListFragment_to_listFragment"
             app:destination="@id/listFragment" />
+
+        <action
+            android:id="@+id/action_inactiveListFragment_to_personEditFragment"
+            app:destination="@id/personEditFragment" />
     </fragment>
 
     <fragment
         android:id="@+id/addPersonFragment"
         android:name="com.example.hexagon.ui.fragments.AddPersonFragment"
-        android:label="Add Person Fragment"
+        android:label="Add user"
         tools:layout="@layout/fragment_add_person">
 
         <action
             android:id="@+id/action_addPersonFragment_to_listFragment"
             app:destination="@id/listFragment" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/personEditFragment"
+        android:name="com.example.hexagon.ui.fragments.PersonEditFragment"
+        tools:layout="@layout/fragment_person_editl">
+        <argument
+            android:name="person"
+            app:argType="com.example.hexagon.data.model.Person" />
     </fragment>
 
 </navigation>
