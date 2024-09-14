@@ -3,10 +3,13 @@ package com.example.hexagon.ui.main
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
 import com.example.hexagon.data.model.Person
 import com.example.hexagon.data.repository.PersonRepository
+import kotlinx.coroutines.launch
 
 class MainViewModel(private val repository: PersonRepository) : ViewModel() {
+
     private val _activePersons = MutableLiveData<List<Person>>()
     val activePersons: LiveData<List<Person>> = _activePersons
 
@@ -18,15 +21,30 @@ class MainViewModel(private val repository: PersonRepository) : ViewModel() {
     }
 
     fun getActivePersons() {
-        _activePersons.value = repository.getActivePersons()
+        viewModelScope.launch {
+            _activePersons.value = repository.getActivePersons()
+        }
+
     }
 
     fun getInactivePersons() {
-        _inactivePersons.value = repository.getInactivePersons()
+        viewModelScope.launch {
+            _inactivePersons.value = repository.getInactivePersons()
+        }
+
     }
 
     fun addPerson(person: Person) {
-        repository.addPerson(person)
-        getActivePersons()
+        viewModelScope.launch {
+            repository.addPerson(person)
+            getActivePersons()
+        }
+    }
+
+    fun updatePerson(person: Person) {
+        viewModelScope.launch {
+            repository.updatePerson(person)
+            getActivePersons()
+        }
     }
 }
