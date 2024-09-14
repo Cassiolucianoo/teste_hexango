@@ -48,12 +48,12 @@ class AddPersonFragment : Fragment() {
 
         setupInputMasks()
 
-        // Botão de seleção de foto
+
         binding.btnSelectPhoto.setOnClickListener {
             openGallery()
         }
 
-        // Botão de salvar a pessoa
+
         binding.btnSave.setOnClickListener {
             if (validateInputs()) {
                 val person = Person(
@@ -61,7 +61,7 @@ class AddPersonFragment : Fragment() {
                     birthDate = binding.etBirthDate.text.toString(),
                     cpf = binding.etCpf.text.toString(),
                     city = binding.etCity.text.toString(),
-                    photo = selectedImageUri?.path ?: "",  // Salva o caminho da imagem no banco de dados
+                    photo = selectedImageUri?.path ?: "",
                     isActive = binding.switchActive.isChecked
                 )
 
@@ -74,7 +74,7 @@ class AddPersonFragment : Fragment() {
     }
 
     private fun setupInputMasks() {
-        // Máscara para CPF - apenas números
+
         binding.etCpf.addTextChangedListener(object : TextWatcher {
             override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
 
@@ -90,7 +90,7 @@ class AddPersonFragment : Fragment() {
             }
         })
 
-        // Máscara para Data de Nascimento - formato dd/MM/yyyy
+
         binding.etBirthDate.addTextChangedListener(object : TextWatcher {
             var isUpdating = false
             var oldText = ""
@@ -121,7 +121,6 @@ class AddPersonFragment : Fragment() {
         })
     }
 
-    // Abrir a galeria para selecionar uma imagem
     private fun openGallery() {
         val intent = Intent(Intent.ACTION_PICK)
         intent.type = "image/*"
@@ -142,7 +141,6 @@ class AddPersonFragment : Fragment() {
         }
     }
 
-    // Salvar imagem no armazenamento interno
     private fun saveImageToInternalStorage(uri: Uri): String? {
         val context = requireContext()
         val inputStream: InputStream? = context.contentResolver.openInputStream(uri)

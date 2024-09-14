@@ -7,19 +7,26 @@ import com.example.hexagon.data.model.Person
 import com.example.hexagon.data.repository.PersonRepository
 
 class MainViewModel(private val repository: PersonRepository) : ViewModel() {
-    private val _persons = MutableLiveData<List<Person>>()
-    val persons: LiveData<List<Person>> = _persons
+    private val _activePersons = MutableLiveData<List<Person>>()
+    val activePersons: LiveData<List<Person>> = _activePersons
+
+    private val _inactivePersons = MutableLiveData<List<Person>>()
+    val inactivePersons: LiveData<List<Person>> = _inactivePersons
 
     init {
         getActivePersons()
     }
 
     fun getActivePersons() {
-        _persons.value = repository.getActivePersons()
+        _activePersons.value = repository.getActivePersons()
+    }
+
+    fun getInactivePersons() {
+        _inactivePersons.value = repository.getInactivePersons()
     }
 
     fun addPerson(person: Person) {
         repository.addPerson(person)
-        _persons.value = repository.getActivePersons()
+        getActivePersons()
     }
 }

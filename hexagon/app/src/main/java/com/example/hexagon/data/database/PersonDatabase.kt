@@ -62,6 +62,29 @@ class PersonDatabase(context: Context) : SQLiteOpenHelper(context, DATABASE_NAME
         return personList
     }
 
+    fun getInactivePersons(): List<Person> {
+        val personList = mutableListOf<Person>()
+        val selectQuery = "SELECT * FROM $TABLE_PERSONS WHERE $KEY_IS_ACTIVE = 0"
+        val db = this.readableDatabase
+        val cursor = db.rawQuery(selectQuery, null)
+        if (cursor.moveToFirst()) {
+            do {
+                val person = Person(
+                    name = cursor.getString(cursor.getColumnIndexOrThrow(KEY_NAME)),
+                    birthDate = cursor.getString(cursor.getColumnIndexOrThrow(KEY_BIRTH_DATE)),
+                    cpf = cursor.getString(cursor.getColumnIndexOrThrow(KEY_CPF)),
+                    city = cursor.getString(cursor.getColumnIndexOrThrow(KEY_CITY)),
+                    photo = cursor.getString(cursor.getColumnIndexOrThrow(KEY_PHOTO)),
+                    isActive = cursor.getInt(cursor.getColumnIndexOrThrow(KEY_IS_ACTIVE)) == 1
+                )
+                personList.add(person)
+            } while (cursor.moveToNext())
+        }
+        cursor.close()
+        db.close()
+        return personList
+    }
+
     companion object {
         private const val DATABASE_VERSION = 1
         private const val DATABASE_NAME = "personsManager"

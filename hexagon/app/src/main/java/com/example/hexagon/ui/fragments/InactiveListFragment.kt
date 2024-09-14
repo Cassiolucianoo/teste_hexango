@@ -6,16 +6,14 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
-import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
-import com.example.hexagon.R
 import com.example.hexagon.data.repository.PersonRepository
 import com.example.hexagon.databinding.FragmentListBinding
 import com.example.hexagon.ui.main.MainViewModel
 import com.example.hexagon.ui.main.MainViewModelFactory
 import com.example.hexagon.ui.main.PersonAdapter
 
-class ListFragment : Fragment() {
+class InactiveListFragment : Fragment() {
 
     private var _binding: FragmentListBinding? = null
     private val binding get() = _binding!!
@@ -42,15 +40,13 @@ class ListFragment : Fragment() {
         binding.recyclerView.adapter = adapter
 
 
-        viewModel.activePersons.observe(viewLifecycleOwner) { persons ->
+        viewModel.inactivePersons.observe(viewLifecycleOwner) { persons ->
             persons?.let {
                 adapter.submitList(it)
             }
         }
 
-        binding.fabAdd.setOnClickListener {
-            findNavController().navigate(R.id.action_listFragment_to_addPersonFragment)
-        }
+        viewModel.getInactivePersons()
     }
 
     override fun onDestroyView() {

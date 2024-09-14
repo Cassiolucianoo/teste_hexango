@@ -11,6 +11,10 @@ class PersonRepository(context: Context) {
         return db.getActivePersons()
     }
 
+    fun getInactivePersons(): List<Person> {
+        return db.getInactivePersons()
+    }
+
     fun addPerson(person: Person) {
         db.addPerson(person)
     }
