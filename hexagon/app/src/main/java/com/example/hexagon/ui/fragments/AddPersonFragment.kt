@@ -4,6 +4,8 @@ import android.app.Activity
 import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
+import android.text.Editable
+import android.text.TextWatcher
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -44,6 +46,8 @@ class AddPersonFragment : Fragment() {
         val viewModelFactory = MainViewModelFactory(repository)
         viewModel = viewModels<MainViewModel> { viewModelFactory }.value
 
+        setupInputMasks()
+
         // Botão de seleção de foto
         binding.btnSelectPhoto.setOnClickListener {
             openGallery()
@@ -67,6 +71,54 @@ class AddPersonFragment : Fragment() {
                 findNavController().navigate(R.id.action_addPersonFragment_to_listFragment)
             }
         }
+    }
+
+    private fun setupInputMasks() {
+        // Máscara para CPF - apenas números
+        binding.etCpf.addTextChangedListener(object : TextWatcher {
+            override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
+
+            override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {}
+
+            override fun afterTextChanged(s: Editable?) {
+                s?.let {
+                    if (it.length > 11) {
+                        binding.etCpf.setText(it.subSequence(0, 11))
+                        binding.etCpf.setSelection(11)
+                    }
+                }
+            }
+        })
+
+        // Máscara para Data de Nascimento - formato dd/MM/yyyy
+        binding.etBirthDate.addTextChangedListener(object : TextWatcher {
+            var isUpdating = false
+            var oldText = ""
+
+            override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
+
+            override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {}
+
+            override fun afterTextChanged(s: Editable?) {
+                if (isUpdating) {
+                    isUpdating = false
+                    return
+                }
+
+                val str = s.toString().replace(Regex("[^\\d]"), "")
+                val newStr = when {
+                    str.length > 8 -> oldText
+                    str.length > 4 -> "${str.substring(0, 2)}/${str.substring(2, 4)}/${str.substring(4)}"
+                    str.length > 2 -> "${str.substring(0, 2)}/${str.substring(2)}"
+                    else -> str
+                }
+
+                isUpdating = true
+                oldText = newStr
+                binding.etBirthDate.setText(newStr)
+                binding.etBirthDate.setSelection(newStr.length)
+            }
+        })
     }
 
     // Abrir a galeria para selecionar uma imagem
