@@ -7,12 +7,12 @@ pluginManagement {
 }
 
 dependencyResolutionManagement {
-    repositoriesMode.set(RepositoriesMode.FAIL_ON_PROJECT_REPOS)
     repositories {
-        google() // Defina aqui os repositórios que serão utilizados
+        google()
         mavenCentral()
     }
 }
 
 rootProject.name = "hexagon"
+
 include(":app")

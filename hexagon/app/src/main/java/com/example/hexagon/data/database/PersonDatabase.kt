@@ -63,7 +63,6 @@ class PersonDatabase(context: Context) : SQLiteOpenHelper(context, DATABASE_NAME
         return personList
     }
 
-    // Função getInactivePersons implementada corretamente
     fun getInactivePersons(): List<Person> {
         val personList = mutableListOf<Person>()
         val selectQuery = "SELECT * FROM $TABLE_PERSONS WHERE $KEY_IS_ACTIVE = 0"
@@ -86,6 +85,29 @@ class PersonDatabase(context: Context) : SQLiteOpenHelper(context, DATABASE_NAME
         cursor.close()
         db.close()
         return personList
+    }
+
+    fun updatePerson(person: Person) {
+        val db = this.writableDatabase
+        val values = ContentValues().apply {
+            put(KEY_NAME, person.name)
+            put(KEY_BIRTH_DATE, person.birthDate)
+            put(KEY_CPF, person.cpf)
+            put(KEY_CITY, person.city)
+            put(KEY_PHOTO, person.photo)
+            put(KEY_IS_ACTIVE, if (person.isActive) 1 else 0)
+        }
+        db.update(TABLE_PERSONS, values, "$KEY_ID=?", arrayOf(person.id.toString()))
+        db.close()
+    }
+
+    fun updatePersonStatus(personId: Int, isActive: Boolean) {
+        val db = this.writableDatabase
+        val values = ContentValues().apply {
+            put(KEY_IS_ACTIVE, if (isActive) 1 else 0)
+        }
+        db.update(TABLE_PERSONS, values, "$KEY_ID=?", arrayOf(personId.toString()))
+        db.close()
     }
 
     companion object {
