@@ -15,7 +15,7 @@ class PersonDatabase(context: Context) : SQLiteOpenHelper(context, DATABASE_NAME
                 + "$KEY_BIRTH_DATE TEXT,"
                 + "$KEY_CPF TEXT,"
                 + "$KEY_CITY TEXT,"
-                + "$KEY_PHOTO TEXT,"
+                + "$KEY_PHOTO TEXT," // Salvar o caminho da imagem como texto
                 + "$KEY_IS_ACTIVE INTEGER)")
         db.execSQL(CREATE_PERSON_TABLE)
     }
@@ -25,6 +25,7 @@ class PersonDatabase(context: Context) : SQLiteOpenHelper(context, DATABASE_NAME
         onCreate(db)
     }
 
+
     fun addPerson(person: Person) {
         val db = this.writableDatabase
         val values = ContentValues().apply {
@@ -32,7 +33,7 @@ class PersonDatabase(context: Context) : SQLiteOpenHelper(context, DATABASE_NAME
             put(KEY_BIRTH_DATE, person.birthDate)
             put(KEY_CPF, person.cpf)
             put(KEY_CITY, person.city)
-            put(KEY_PHOTO, person.photo)
+            put(KEY_PHOTO, person.photo) // Armazena o caminho da imagem
             put(KEY_IS_ACTIVE, if (person.isActive) 1 else 0)
         }
         db.insert(TABLE_PERSONS, null, values)
@@ -52,7 +53,7 @@ class PersonDatabase(context: Context) : SQLiteOpenHelper(context, DATABASE_NAME
                     birthDate = cursor.getString(cursor.getColumnIndexOrThrow(KEY_BIRTH_DATE)),
                     cpf = cursor.getString(cursor.getColumnIndexOrThrow(KEY_CPF)),
                     city = cursor.getString(cursor.getColumnIndexOrThrow(KEY_CITY)),
-                    photo = cursor.getString(cursor.getColumnIndexOrThrow(KEY_PHOTO)),
+                    photo = cursor.getString(cursor.getColumnIndexOrThrow(KEY_PHOTO)), // Recupera o caminho da imagem
                     isActive = cursor.getInt(cursor.getColumnIndexOrThrow(KEY_IS_ACTIVE)) == 1
                 )
                 personList.add(person)
@@ -62,6 +63,9 @@ class PersonDatabase(context: Context) : SQLiteOpenHelper(context, DATABASE_NAME
         db.close()
         return personList
     }
+
+
+
 
     fun getInactivePersons(): List<Person> {
         val personList = mutableListOf<Person>()
@@ -76,7 +80,7 @@ class PersonDatabase(context: Context) : SQLiteOpenHelper(context, DATABASE_NAME
                     birthDate = cursor.getString(cursor.getColumnIndexOrThrow(KEY_BIRTH_DATE)),
                     cpf = cursor.getString(cursor.getColumnIndexOrThrow(KEY_CPF)),
                     city = cursor.getString(cursor.getColumnIndexOrThrow(KEY_CITY)),
-                    photo = cursor.getString(cursor.getColumnIndexOrThrow(KEY_PHOTO)),
+                    photo = cursor.getString(cursor.getColumnIndexOrThrow(KEY_PHOTO)), // Carrega o caminho da imagem
                     isActive = cursor.getInt(cursor.getColumnIndexOrThrow(KEY_IS_ACTIVE)) == 0
                 )
                 personList.add(person)
@@ -94,7 +98,7 @@ class PersonDatabase(context: Context) : SQLiteOpenHelper(context, DATABASE_NAME
             put(KEY_BIRTH_DATE, person.birthDate)
             put(KEY_CPF, person.cpf)
             put(KEY_CITY, person.city)
-            put(KEY_PHOTO, person.photo)
+            put(KEY_PHOTO, person.photo) // Atualiza o caminho da imagem
             put(KEY_IS_ACTIVE, if (person.isActive) 1 else 0)
         }
         db.update(TABLE_PERSONS, values, "$KEY_ID=?", arrayOf(person.id.toString()))

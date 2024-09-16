@@ -1,16 +1,21 @@
 package com.example.hexagon.ui.screens
 
-import androidx.compose.foundation.border
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
+import coil.compose.AsyncImagePainter
+import coil.compose.rememberAsyncImagePainter
+import com.example.hexagon.R
 import com.example.hexagon.data.model.Person
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -19,7 +24,8 @@ fun AddOrEditPersonScreen(
     navController: NavHostController,
     person: Person?,
     onSave: (Person) -> Unit,
-    selectPhoto: () -> Unit
+    selectPhoto: () -> Unit,
+    photoPath: String?
 ) {
     var name by remember { mutableStateOf(person?.name ?: "") }
     var birthDate by remember { mutableStateOf(person?.birthDate ?: "") }
@@ -37,11 +43,10 @@ fun AddOrEditPersonScreen(
         Column(
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(paddingValues) // Garante que o conteúdo comece após o TopAppBar
+                .padding(paddingValues)
                 .padding(16.dp)
-                .verticalScroll(rememberScrollState()) // Permite rolagem se o conteúdo for maior que a tela
+                .verticalScroll(rememberScrollState())
         ) {
-            // Campo de Nome
             CustomTextField(
                 value = name,
                 onValueChange = { name = it },
@@ -50,7 +55,6 @@ fun AddOrEditPersonScreen(
 
             Spacer(modifier = Modifier.height(8.dp))
 
-            // Campo de Data de Nascimento com máscara
             CustomTextFieldWithMask(
                 value = birthDate,
                 onValueChange = { birthDate = it },
@@ -59,7 +63,6 @@ fun AddOrEditPersonScreen(
 
             Spacer(modifier = Modifier.height(8.dp))
 
-            // Campo de CPF
             CustomTextField(
                 value = cpf,
                 onValueChange = { cpf = it },
@@ -68,7 +71,6 @@ fun AddOrEditPersonScreen(
 
             Spacer(modifier = Modifier.height(8.dp))
 
-            // Campo de Cidade
             CustomTextField(
                 value = city,
                 onValueChange = { city = it },
@@ -77,9 +79,34 @@ fun AddOrEditPersonScreen(
 
             Spacer(modifier = Modifier.height(16.dp))
 
-            // Switch para Ativo/Inativo
+            if (!photoPath.isNullOrEmpty()) {
+                Image(
+                    painter = rememberAsyncImagePainter(model = photoPath),
+                    contentDescription = "User Photo",
+                    contentScale = ContentScale.Crop,
+                    modifier = Modifier.size(150.dp)
+                )
+            } else {
+                Image(
+                    painter = painterResource(id = R.drawable.baseline_person_24),
+                    contentDescription = "Default User Icon",
+                    modifier = Modifier.size(150.dp)
+                )
+            }
+
+            Spacer(modifier = Modifier.height(8.dp))
+
+            Button(
+                onClick = selectPhoto,
+                modifier = Modifier.fillMaxWidth()
+            ) {
+                Text("Selecionar Foto")
+            }
+
+            Spacer(modifier = Modifier.height(16.dp))
+
             Row(
-                verticalAlignment = androidx.compose.ui.Alignment.CenterVertically,
+                verticalAlignment = Alignment.CenterVertically,
                 modifier = Modifier.fillMaxWidth()
             ) {
                 Text("Ativo")
@@ -88,7 +115,6 @@ fun AddOrEditPersonScreen(
             }
 
             Spacer(modifier = Modifier.height(16.dp))
-
 
             Button(
                 onClick = {
@@ -99,7 +125,7 @@ fun AddOrEditPersonScreen(
                         cpf = cpf,
                         city = city,
                         isActive = isActive,
-                        photo = person?.photo ?: ""
+                        photo = photoPath ?: "" // Caminho da nova foto
                     )
                     onSave(newPerson)
                     navController.navigateUp()
@@ -108,39 +134,6 @@ fun AddOrEditPersonScreen(
             ) {
                 Text("Salvar")
             }
-
-            Spacer(modifier = Modifier.height(16.dp))
-
-
-            Button(
-                onClick = selectPhoto,
-                modifier = Modifier.fillMaxWidth()
-            ) {
-                Text("Selecionar Foto")
-            }
         }
     }
-}
-
-@OptIn(ExperimentalMaterial3Api::class)
-@Composable
-fun CustomTextField(
-    value: String,
-    onValueChange: (String) -> Unit,
-    label: String
-) {
-    TextField(
-        value = value,
-        onValueChange = onValueChange,
-        modifier = Modifier
-            .fillMaxWidth()
-            .border(1.dp, MaterialTheme.colorScheme.primary, shape = RoundedCornerShape(8.dp)),
-        shape = RoundedCornerShape(8.dp),
-        colors = TextFieldDefaults.textFieldColors(
-            containerColor = MaterialTheme.colorScheme.surface,
-            focusedIndicatorColor = Color.Transparent,
-            unfocusedIndicatorColor = Color.Transparent
-        ),
-        label = { Text(label) }
-    )
 }

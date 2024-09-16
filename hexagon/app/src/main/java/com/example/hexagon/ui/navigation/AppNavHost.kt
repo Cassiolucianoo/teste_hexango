@@ -13,7 +13,8 @@ import com.example.hexagon.ui.main.MainViewModel
 fun AppNavHost(
     navController: NavHostController,
     viewModel: MainViewModel,
-    onSelectPhoto: () -> Unit
+    onSelectPhoto: () -> Unit,
+    photoPath: String?
 ) {
     NavHost(navController = navController, startDestination = "list") {
         composable("list") {
@@ -34,7 +35,8 @@ fun AppNavHost(
                 navController = navController,
                 person = null,
                 onSave = { person -> viewModel.addPerson(person) },
-                selectPhoto = onSelectPhoto
+                selectPhoto = onSelectPhoto,
+                photoPath = photoPath
             )
         }
 
@@ -61,7 +63,8 @@ fun AppNavHost(
                     navController = navController,
                     person = it,
                     onSave = { updatedPerson -> viewModel.updatePerson(updatedPerson) },
-                    selectPhoto = onSelectPhoto
+                    selectPhoto = onSelectPhoto,
+                    photoPath = photoPath
                 )
             }
         }
