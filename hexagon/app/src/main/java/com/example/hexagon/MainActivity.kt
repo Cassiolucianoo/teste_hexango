@@ -11,6 +11,7 @@ import androidx.activity.viewModels
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.platform.LocalContext
+import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import com.example.hexagon.ui.navigation.AppNavHost
 import com.example.hexagon.ui.main.MainViewModel
@@ -21,8 +22,6 @@ import com.example.hexagon.ui.components.TopAppBarWithMenu
 import java.io.File
 import java.io.FileOutputStream
 import java.io.InputStream
-
-
 
 class MainActivity : ComponentActivity() {
 
@@ -47,7 +46,18 @@ class MainActivity : ComponentActivity() {
         val navController = rememberNavController()
         val context = LocalContext.current
 
-        // Estado para armazenar o caminho da imagem selecionada
+
+        val navBackStackEntry by navController.currentBackStackEntryAsState()
+        val currentScreen = navBackStackEntry?.destination?.route
+
+        // Controle de título baseado na rota
+        val title = when (currentScreen) {
+            "list" -> "Ativos"
+            "inactiveList" -> "Inativos"
+            "addPerson" -> "Adicionar"
+            else -> "Editar "
+        }
+
         var selectedImagePath by remember { mutableStateOf<String?>(null) }
 
         // Função para resetar o caminho da foto
@@ -68,6 +78,7 @@ class MainActivity : ComponentActivity() {
         Scaffold(
             topBar = {
                 TopAppBarWithMenu(
+                    title = title, // Passa o título dinâmico para o TopAppBarWithMenu
                     onActiveClick = { navController.navigate("list") },
                     onInactiveClick = { navController.navigate("inactiveList") }
                 )
@@ -78,7 +89,7 @@ class MainActivity : ComponentActivity() {
                     viewModel = viewModel,
                     onSelectPhoto = { selectImageLauncher.launch("image/*") },
                     photoPath = selectedImagePath,
-                    resetPhotoPath = { resetPhotoPath() } // Passa a função lambda que chama resetPhotoPath
+                    resetPhotoPath = { resetPhotoPath() }
                 )
             }
         )

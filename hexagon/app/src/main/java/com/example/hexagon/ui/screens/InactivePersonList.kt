@@ -23,7 +23,7 @@ fun InactiveListScreen(
     Scaffold(
         topBar = {
             TopAppBar(
-                title = { Text("Inactive Persons") }
+                title = { Text(text = "Inactive Persons") }
             )
         },
         content = { paddingValues ->

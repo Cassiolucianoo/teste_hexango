@@ -2,16 +2,26 @@ package com.example.hexagon.ui.components
 
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import com.example.hexagon.R
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun TopAppBarWithMenu(onActiveClick: () -> Unit, onInactiveClick: () -> Unit) {
+fun TopAppBarWithMenu(
+    title: String,
+    onActiveClick: () -> Unit,
+    onInactiveClick: () -> Unit
+) {
     var expanded by remember { mutableStateOf(false) }
 
     TopAppBar(
-        title = { Text(text = "Hexagon App") },
+        title = { Text(text = title, color = Color.White) }, 
+        colors = TopAppBarDefaults.smallTopAppBarColors(
+            containerColor = Color(0xFF6200EA),
+            titleContentColor = Color.White,
+            actionIconContentColor = Color.White
+        ),
         actions = {
             IconButton(onClick = { expanded = true }) {
                 Icon(

@@ -10,8 +10,6 @@ import com.example.hexagon.ui.screens.ListScreen
 import com.example.hexagon.ui.screens.InactiveListScreen
 import com.example.hexagon.ui.main.MainViewModel
 
-
-
 @Composable
 fun AppNavHost(
     navController: NavHostController,
@@ -21,7 +19,6 @@ fun AppNavHost(
     resetPhotoPath: () -> Unit
 ) {
     NavHost(navController = navController, startDestination = "list") {
-
         composable("list") {
             ListScreen(
                 navController = navController,
@@ -50,7 +47,6 @@ fun AppNavHost(
 
         composable("addPerson") {
             resetPhotoPath()
-
             AddPersonScreen(
                 navController = navController,
                 onSave = { person ->
@@ -84,6 +80,5 @@ fun AppNavHost(
                 )
             }
         }
-
     }
 }

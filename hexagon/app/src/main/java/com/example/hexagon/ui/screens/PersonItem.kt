@@ -12,6 +12,7 @@ import androidx.compose.ui.unit.dp
 import coil.compose.rememberAsyncImagePainter
 import com.example.hexagon.R
 import com.example.hexagon.data.model.Person
+import com.example.hexagon.utils.DateUtils.calculateAge
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -56,8 +57,9 @@ fun PersonItem(
                     .weight(1f)
                     .padding(end = 16.dp)
             ) {
-                Text(text = person.name, style = MaterialTheme.typography.titleMedium)
-                Text(text = "Age: ${person.birthDate}", style = MaterialTheme.typography.bodyMedium)
+                Text(text = "Nome: ${person.name}", style = MaterialTheme.typography.titleMedium)
+                val age = calculateAge(person.birthDate)
+                Text(text = "Idade: ${age ?: "Unknown"}", style = MaterialTheme.typography.bodyMedium)
             }
 
             Column {
