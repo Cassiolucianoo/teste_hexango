@@ -1,9 +1,14 @@
 package com.example.hexagon.ui.screens
 
+import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
 import com.example.hexagon.data.model.Person
@@ -22,86 +27,113 @@ fun AddOrEditPersonScreen(
     var city by remember { mutableStateOf(person?.city ?: "") }
     var isActive by remember { mutableStateOf(person?.isActive ?: true) }
 
-    Column(
-        modifier = Modifier
-            .fillMaxWidth()
-            .padding(16.dp)
-    ) {
-
-        TextField(
-            value = name,
-            onValueChange = { name = it },
-            modifier = Modifier.fillMaxWidth(),
-            label = { Text("Nome") }
-        )
-
-        Spacer(modifier = Modifier.height(8.dp))
-
-
-        TextField(
-            value = birthDate,
-            onValueChange = { birthDate = it },
-            modifier = Modifier.fillMaxWidth(),
-            label = { Text("Data de Nascimento") }
-        )
-
-        Spacer(modifier = Modifier.height(8.dp))
-
-
-        TextField(
-            value = cpf,
-            onValueChange = { cpf = it },
-            modifier = Modifier.fillMaxWidth(),
-            label = { Text("CPF") }
-        )
-
-        Spacer(modifier = Modifier.height(8.dp))
-
-
-        TextField(
-            value = city,
-            onValueChange = { city = it },
-            modifier = Modifier.fillMaxWidth(),
-            label = { Text("Cidade") }
-        )
-
-        Spacer(modifier = Modifier.height(16.dp))
-
-
-        Row {
-            Text("Ativo")
-            Switch(checked = isActive, onCheckedChange = { isActive = it })
+    Scaffold(
+        topBar = {
+            TopAppBar(
+                title = { Text(text = "Hexagon App") }
+            )
         }
-
-        Spacer(modifier = Modifier.height(16.dp))
-
-
-        Button(
-            onClick = {
-                val newPerson = Person(
-                    id = person?.id ?: 0,
-                    name = name,
-                    birthDate = birthDate,
-                    cpf = cpf,
-                    city = city,
-                    isActive = isActive,
-                    photo = person?.photo ?: ""
-                )
-                onSave(newPerson)
-                navController.navigateUp()
-            },
-            modifier = Modifier.fillMaxWidth()
+    ) { paddingValues ->
+        Column(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(paddingValues) // Garante que o conteúdo comece após o TopAppBar
+                .padding(16.dp) // Adiciona um padding interno para o conteúdo
+                .verticalScroll(rememberScrollState()) // Permite rolagem se o conteúdo for maior que a tela
         ) {
-            Text("Salvar")
-        }
+            CustomTextField(
+                value = name,
+                onValueChange = { name = it },
+                label = "Nome"
+            )
 
-        Spacer(modifier = Modifier.height(16.dp))
+            Spacer(modifier = Modifier.height(8.dp))
 
-        Button(
-            onClick = selectPhoto,
-            modifier = Modifier.fillMaxWidth()
-        ) {
-            Text("Selecionar Foto")
+            CustomTextField(
+                value = birthDate,
+                onValueChange = { birthDate = it },
+                label = "Data de Nascimento"
+            )
+
+            Spacer(modifier = Modifier.height(8.dp))
+
+            CustomTextField(
+                value = cpf,
+                onValueChange = { cpf = it },
+                label = "CPF"
+            )
+
+            Spacer(modifier = Modifier.height(8.dp))
+
+            CustomTextField(
+                value = city,
+                onValueChange = { city = it },
+                label = "Cidade"
+            )
+
+            Spacer(modifier = Modifier.height(16.dp))
+
+            Row(
+                verticalAlignment = androidx.compose.ui.Alignment.CenterVertically,
+                modifier = Modifier.fillMaxWidth()
+            ) {
+                Text("Ativo")
+                Spacer(modifier = Modifier.width(8.dp))
+                Switch(checked = isActive, onCheckedChange = { isActive = it })
+            }
+
+            Spacer(modifier = Modifier.height(16.dp))
+
+            Button(
+                onClick = {
+                    val newPerson = Person(
+                        id = person?.id ?: 0,
+                        name = name,
+                        birthDate = birthDate,
+                        cpf = cpf,
+                        city = city,
+                        isActive = isActive,
+                        photo = person?.photo ?: ""
+                    )
+                    onSave(newPerson)
+                    navController.navigateUp()
+                },
+                modifier = Modifier.fillMaxWidth()
+            ) {
+                Text("Salvar")
+            }
+
+            Spacer(modifier = Modifier.height(16.dp))
+
+            Button(
+                onClick = selectPhoto,
+                modifier = Modifier.fillMaxWidth()
+            ) {
+                Text("Selecionar Foto")
+            }
         }
     }
+}
+
+@OptIn(ExperimentalMaterial3Api::class)
+@Composable
+fun CustomTextField(
+    value: String,
+    onValueChange: (String) -> Unit,
+    label: String
+) {
+    TextField(
+        value = value,
+        onValueChange = onValueChange,
+        modifier = Modifier
+            .fillMaxWidth()
+            .border(1.dp, Color.Gray, shape = RoundedCornerShape(8.dp)),
+        shape = RoundedCornerShape(8.dp),
+        colors = TextFieldDefaults.textFieldColors(
+            containerColor = Color.Transparent,
+            focusedIndicatorColor = Color.Transparent,
+            unfocusedIndicatorColor = Color.Transparent
+        ),
+        label = { Text(label) }
+    )
 }
