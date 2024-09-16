@@ -1,18 +1,10 @@
-buildscript {
-    repositories {
-        google()
-        mavenCentral()
-    }
-    dependencies {
-        // Plugin Safe Args para navegação
-        classpath("androidx.navigation:navigation-safe-args-gradle-plugin:2.6.0")
-    }
+plugins {
+    id("com.android.application") version "8.0.0" apply false
+    id("com.android.library") version "8.0.0" apply false
+    id("org.jetbrains.kotlin.android") version "1.9.0" apply false
+    id("androidx.navigation.safeargs.kotlin") version "2.6.0" apply false
 }
 
-allprojects {
-    // Não é mais necessário declarar repositórios aqui
-}
-
-task<Delete>("clean") {
-    delete(rootProject.buildDir)
+tasks.register<Delete>("clean") {
+    delete(layout.buildDirectory)
 }
