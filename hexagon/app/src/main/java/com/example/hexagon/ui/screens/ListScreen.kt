@@ -21,6 +21,11 @@ fun ListScreen(
     onDeactivateClick: (Person) -> Unit
 ) {
     Scaffold(
+        topBar = {
+            TopAppBar(
+                title = { Text("Hexagon App") }
+            )
+        },
         floatingActionButton = {
             FloatingActionButton(onClick = { navController.navigate("addPerson") }) {
                 Icon(Icons.Default.Add, contentDescription = "Add Person")

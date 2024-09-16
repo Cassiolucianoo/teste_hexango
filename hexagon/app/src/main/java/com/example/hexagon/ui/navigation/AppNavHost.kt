@@ -44,6 +44,9 @@ fun AppNavHost(
                 persons = viewModel.inactivePersons.value ?: emptyList(),
                 onReactivateClick = { person ->
                     viewModel.updatePersonStatus(person.id, true)
+                },
+                onEditClick = { person ->
+                    navController.navigate("editPerson/${person.id}")
                 }
             )
         }
@@ -51,6 +54,8 @@ fun AppNavHost(
         composable("editPerson/{personId}") { backStackEntry ->
             val personId = backStackEntry.arguments?.getString("personId")?.toIntOrNull()
             val person = viewModel.activePersons.value?.find { it.id == personId }
+                ?: viewModel.inactivePersons.value?.find { it.id == personId }
+
             person?.let {
                 AddOrEditPersonScreen(
                     navController = navController,
