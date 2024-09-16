@@ -1,5 +1,6 @@
 package com.example.hexagon.ui.screens
 
+import CustomCpfTextField
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
@@ -63,7 +64,7 @@ fun AddPersonScreen(
 
             Spacer(modifier = Modifier.height(8.dp))
 
-            CustomTextField(
+            CustomCpfTextField(
                 value = cpf,
                 onValueChange = { cpf = it },
                 label = "CPF"
@@ -84,13 +85,17 @@ fun AddPersonScreen(
                     painter = rememberAsyncImagePainter(model = currentPhotoPath),
                     contentDescription = "User Photo",
                     contentScale = ContentScale.Crop,
-                    modifier = Modifier.size(250.dp)
+                    modifier = Modifier
+                        .size(250.dp)
+                        .align(Alignment.CenterHorizontally)
                 )
             } else {
                 Image(
                     painter = defaultPhoto,
                     contentDescription = "Default User Icon",
-                    modifier = Modifier.size(150.dp)
+                    modifier = Modifier
+                        .size(150.dp)
+                        .align(Alignment.CenterHorizontally)
                 )
             }
 
@@ -98,7 +103,6 @@ fun AddPersonScreen(
 
             Button(
                 onClick = {
-
                     selectPhoto("new_photo_path.jpg")
                 },
                 modifier = Modifier.fillMaxWidth()
@@ -107,7 +111,6 @@ fun AddPersonScreen(
             }
 
             Spacer(modifier = Modifier.height(16.dp))
-
 
             Row(
                 verticalAlignment = Alignment.CenterVertically,

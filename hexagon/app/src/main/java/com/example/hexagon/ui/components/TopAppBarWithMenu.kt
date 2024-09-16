@@ -16,7 +16,7 @@ fun TopAppBarWithMenu(
     var expanded by remember { mutableStateOf(false) }
 
     TopAppBar(
-        title = { Text(text = title, color = Color.White) }, 
+        title = { Text(text = title, color = Color.White) },
         colors = TopAppBarDefaults.smallTopAppBarColors(
             containerColor = Color(0xFF6200EA),
             titleContentColor = Color.White,
