@@ -3,7 +3,6 @@ package com.example.hexagon.ui.screens
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
-import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
@@ -13,46 +12,32 @@ import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
-import coil.compose.AsyncImagePainter
 import coil.compose.rememberAsyncImagePainter
 import com.example.hexagon.R
 import com.example.hexagon.data.model.Person
 
-
-
-
-
-
-
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun AddOrEditPersonScreen(
+fun AddPersonScreen(
     navController: NavHostController,
-    person: Person?,
     onSave: (Person) -> Unit,
-    selectPhoto: (String) -> Unit, // Modifiquei para aceitar o caminho da nova foto
-    photoPath: String?
+    selectPhoto: (String) -> Unit,  // Função para selecionar uma foto e passar o caminho
+    photoPath: String? // Parâmetro opcional para o caminho da foto selecionada
 ) {
-    var name by remember { mutableStateOf(person?.name ?: "") }
-    var birthDate by remember { mutableStateOf(person?.birthDate ?: "") }
-    var cpf by remember { mutableStateOf(person?.cpf ?: "") }
-    var city by remember { mutableStateOf(person?.city ?: "") }
-    var isActive by remember { mutableStateOf(person?.isActive ?: true) }
+    // Variáveis de estado para os campos
+    var name by remember { mutableStateOf("") }
+    var birthDate by remember { mutableStateOf("") }
+    var cpf by remember { mutableStateOf("") }
+    var city by remember { mutableStateOf("") }
+    var isActive by remember { mutableStateOf(true) }
 
-    // Se a pessoa for nula, use a imagem padrão
-    var currentPhotoPath by remember { mutableStateOf(photoPath ?: person?.photo ?: "") }
-
-    // Use uma imagem padrão ao adicionar uma nova pessoa
+    // Variável de estado para a imagem, sempre iniciando com a imagem padrão
+    var currentPhotoPath by remember { mutableStateOf("") }
     val defaultPhoto = painterResource(id = R.drawable.baseline_person_24)
-
-    // Atualiza a foto assim que o caminho for alterado
-    val updatedPhotoPath = rememberUpdatedState(currentPhotoPath)
 
     Scaffold(
         topBar = {
-            TopAppBar(
-                title = { Text(text = "Hexagon App") }
-            )
+            TopAppBar(title = { Text(text = "Add Person") })
         }
     ) { paddingValues ->
         Column(
@@ -62,6 +47,7 @@ fun AddOrEditPersonScreen(
                 .padding(16.dp)
                 .verticalScroll(rememberScrollState())
         ) {
+            // Nome
             CustomTextField(
                 value = name,
                 onValueChange = { name = it },
@@ -70,6 +56,7 @@ fun AddOrEditPersonScreen(
 
             Spacer(modifier = Modifier.height(8.dp))
 
+            // Data de Nascimento
             CustomTextFieldWithMask(
                 value = birthDate,
                 onValueChange = { birthDate = it },
@@ -78,6 +65,7 @@ fun AddOrEditPersonScreen(
 
             Spacer(modifier = Modifier.height(8.dp))
 
+            // CPF
             CustomTextField(
                 value = cpf,
                 onValueChange = { cpf = it },
@@ -86,6 +74,7 @@ fun AddOrEditPersonScreen(
 
             Spacer(modifier = Modifier.height(8.dp))
 
+            // Cidade
             CustomTextField(
                 value = city,
                 onValueChange = { city = it },
@@ -94,16 +83,15 @@ fun AddOrEditPersonScreen(
 
             Spacer(modifier = Modifier.height(16.dp))
 
+            // Exibe a foto atual ou a imagem padrão
             if (currentPhotoPath.isNotEmpty()) {
-                // Exibe a foto existente ou selecionada
                 Image(
-                    painter = rememberAsyncImagePainter(model = updatedPhotoPath.value),
+                    painter = rememberAsyncImagePainter(model = currentPhotoPath),
                     contentDescription = "User Photo",
                     contentScale = ContentScale.Crop,
                     modifier = Modifier.size(150.dp)
                 )
             } else {
-                // Mostra a imagem padrão ao adicionar uma nova pessoa
                 Image(
                     painter = defaultPhoto,
                     contentDescription = "Default User Icon",
@@ -113,11 +101,11 @@ fun AddOrEditPersonScreen(
 
             Spacer(modifier = Modifier.height(8.dp))
 
+            // Botão de Seleção de Foto
             Button(
                 onClick = {
-                    // Aqui, a função selectPhoto é chamada e depois atualizamos a foto
-                    selectPhoto("new_photo_path.jpg") // Exemplo: passe o caminho da nova foto
-                    currentPhotoPath = "new_photo_path.jpg" // Atualiza o estado local imediatamente
+                    // Função para selecionar uma nova foto e atualizar o estado
+                    selectPhoto("new_photo_path.jpg")  // Exemplo de caminho fictício, atualize isso ao selecionar a foto
                 },
                 modifier = Modifier.fillMaxWidth()
             ) {
@@ -126,6 +114,7 @@ fun AddOrEditPersonScreen(
 
             Spacer(modifier = Modifier.height(16.dp))
 
+            // Switch Ativo/Inativo
             Row(
                 verticalAlignment = Alignment.CenterVertically,
                 modifier = Modifier.fillMaxWidth()
@@ -137,25 +126,42 @@ fun AddOrEditPersonScreen(
 
             Spacer(modifier = Modifier.height(16.dp))
 
+            // Botão de Salvar
             Button(
                 onClick = {
                     val newPerson = Person(
-                        id = person?.id ?: 0,
+                        id = 0,
                         name = name,
                         birthDate = birthDate,
                         cpf = cpf,
                         city = city,
                         isActive = isActive,
-                        photo = currentPhotoPath.ifEmpty { "" } // Caminho da nova foto ou vazio se não selecionado
+                        photo = currentPhotoPath.ifEmpty { "" } // Salva o caminho da foto, ou vazio se não houver
                     )
                     onSave(newPerson)
-                    navController.popBackStack() // Limpa a pilha de navegação
-                    navController.navigate("list") // Navega para a tela de pessoas ativas
+                    navController.navigate("list") // Navegar para a lista após salvar
                 },
                 modifier = Modifier.fillMaxWidth()
             ) {
                 Text("Salvar")
             }
+        }
+    }
+
+
+    LaunchedEffect(Unit) {
+        currentPhotoPath = ""
+        name = ""
+        birthDate = ""
+        cpf = ""
+        city = ""
+        isActive = true
+    }
+
+
+    LaunchedEffect(photoPath) {
+        photoPath?.let {
+            currentPhotoPath = it
         }
     }
 }

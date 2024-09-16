@@ -24,7 +24,7 @@ fun InactiveListScreen(
     onReactivateClick: (Person) -> Unit,
     onEditClick: (Person) -> Unit
 ) {
-    // Recoleta da lista quando uma pessoa é reativada
+
     var currentPersons by remember { mutableStateOf(persons) }
 
     Scaffold(
@@ -44,7 +44,7 @@ fun InactiveListScreen(
                         person = person,
                         onReactivateClick = {
                             onReactivateClick(it)
-                            // Atualiza a lista removendo a pessoa reativada
+
                             currentPersons = currentPersons.filter { p -> p.id != it.id }
                         },
                         onEditClick = onEditClick

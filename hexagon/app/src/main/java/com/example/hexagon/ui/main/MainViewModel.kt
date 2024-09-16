@@ -36,21 +36,21 @@ class MainViewModel(private val repository: PersonRepository) : ViewModel() {
     fun updatePersonStatus(personId: Int, isActive: Boolean) {
         viewModelScope.launch {
             repository.updatePersonStatus(personId, isActive)
-            getActivePersons()  // Atualiza lista de pessoas ativas
-            getInactivePersons()  // Atualiza lista de pessoas inativas
+            getActivePersons()
+            getInactivePersons()
         }
     }
     fun addPerson(person: Person) {
         viewModelScope.launch {
             repository.addPerson(person)
-            getActivePersons()  // Atualiza a lista de pessoas ativas
+            getActivePersons()
         }
     }
 
     fun updatePerson(person: Person) {
         viewModelScope.launch {
             repository.updatePerson(person)
-            getActivePersons()  // Atualiza a lista de pessoas ativas
+            getActivePersons()
         }
     }
 

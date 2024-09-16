@@ -4,19 +4,24 @@ import androidx.compose.runtime.Composable
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
-import com.example.hexagon.ui.screens.AddOrEditPersonScreen
+import com.example.hexagon.ui.screens.AddPersonScreen
+import com.example.hexagon.ui.screens.EditPersonScreen
 import com.example.hexagon.ui.screens.ListScreen
 import com.example.hexagon.ui.screens.InactiveListScreen
 import com.example.hexagon.ui.main.MainViewModel
+
+
 
 @Composable
 fun AppNavHost(
     navController: NavHostController,
     viewModel: MainViewModel,
     onSelectPhoto: () -> Unit,
-    photoPath: String?
+    photoPath: String?,
+    resetPhotoPath: () -> Unit
 ) {
     NavHost(navController = navController, startDestination = "list") {
+
         composable("list") {
             ListScreen(
                 navController = navController,
@@ -25,7 +30,6 @@ fun AppNavHost(
                     navController.navigate("editPerson/${person.id}")
                 },
                 onDeactivateClick = { person ->
-                    // Aqui desativa e atualiza a lista
                     viewModel.updatePersonStatus(person.id, false)
                 }
             )
@@ -36,7 +40,6 @@ fun AppNavHost(
                 navController = navController,
                 persons = viewModel.inactivePersons.value ?: emptyList(),
                 onReactivateClick = { person ->
-                    // Aqui reativa e atualiza a lista
                     viewModel.updatePersonStatus(person.id, true)
                 },
                 onEditClick = { person ->
@@ -45,18 +48,18 @@ fun AppNavHost(
             )
         }
 
-        // Defina a rota "addPerson"
         composable("addPerson") {
-            AddOrEditPersonScreen(
+            resetPhotoPath()
+
+            AddPersonScreen(
                 navController = navController,
-                person = null,
                 onSave = { person ->
-                    // Adiciona pessoa ao banco de dados
                     viewModel.addPerson(person)
-                    // Navega de volta à lista
-                    navController.navigateUp()
+                    viewModel.getActivePersons()
+                    viewModel.getInactivePersons()
+                    navController.navigate("list")
                 },
-                selectPhoto = onSelectPhoto,
+                selectPhoto = { onSelectPhoto() },
                 photoPath = photoPath
             )
         }
@@ -67,16 +70,14 @@ fun AppNavHost(
                 ?: viewModel.inactivePersons.value?.find { it.id == personId }
 
             person?.let {
-                AddOrEditPersonScreen(
+                EditPersonScreen(
                     navController = navController,
                     person = it,
                     onSave = { updatedPerson ->
-                        // Atualiza a pessoa no banco de dados
                         viewModel.updatePerson(updatedPerson)
-                        // Navega de volta à lista
-                        navController.navigateUp()
+                        navController.navigate("list")
                     },
-                    selectPhoto = onSelectPhoto,
+                    selectPhoto = { onSelectPhoto() },
                     photoPath = photoPath
                 )
             }

@@ -22,6 +22,8 @@ import java.io.File
 import java.io.FileOutputStream
 import java.io.InputStream
 
+
+
 class MainActivity : ComponentActivity() {
 
     private val viewModel: MainViewModel by viewModels {
@@ -45,9 +47,15 @@ class MainActivity : ComponentActivity() {
         val navController = rememberNavController()
         val context = LocalContext.current
 
+        // Estado para armazenar o caminho da imagem selecionada
         var selectedImagePath by remember { mutableStateOf<String?>(null) }
 
+        // Função para resetar o caminho da foto
+        fun resetPhotoPath() {
+            selectedImagePath = null
+        }
 
+        // Lançador para selecionar imagem
         val selectImageLauncher = rememberLauncherForActivityResult(
             contract = ActivityResultContracts.GetContent()
         ) { uri: Uri? ->
@@ -69,12 +77,12 @@ class MainActivity : ComponentActivity() {
                     navController = navController,
                     viewModel = viewModel,
                     onSelectPhoto = { selectImageLauncher.launch("image/*") },
-                    photoPath = selectedImagePath
+                    photoPath = selectedImagePath,
+                    resetPhotoPath = { resetPhotoPath() } // Passa a função lambda que chama resetPhotoPath
                 )
             }
         )
     }
-
 
     fun saveImageToFile(context: Context, imageUri: Uri): String {
         val inputStream: InputStream? = context.contentResolver.openInputStream(imageUri)
