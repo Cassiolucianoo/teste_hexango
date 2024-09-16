@@ -21,17 +21,16 @@ import com.example.hexagon.data.model.Person
 fun AddPersonScreen(
     navController: NavHostController,
     onSave: (Person) -> Unit,
-    selectPhoto: (String) -> Unit,  // Função para selecionar uma foto e passar o caminho
-    photoPath: String? // Parâmetro opcional para o caminho da foto selecionada
+    selectPhoto: (String) -> Unit,
+    photoPath: String?
 ) {
-    // Variáveis de estado para os campos
+
     var name by remember { mutableStateOf("") }
     var birthDate by remember { mutableStateOf("") }
     var cpf by remember { mutableStateOf("") }
     var city by remember { mutableStateOf("") }
     var isActive by remember { mutableStateOf(true) }
 
-    // Variável de estado para a imagem, sempre iniciando com a imagem padrão
     var currentPhotoPath by remember { mutableStateOf("") }
     val defaultPhoto = painterResource(id = R.drawable.baseline_person_24)
 
@@ -47,7 +46,7 @@ fun AddPersonScreen(
                 .padding(16.dp)
                 .verticalScroll(rememberScrollState())
         ) {
-            // Nome
+
             CustomTextField(
                 value = name,
                 onValueChange = { name = it },
@@ -56,7 +55,6 @@ fun AddPersonScreen(
 
             Spacer(modifier = Modifier.height(8.dp))
 
-            // Data de Nascimento
             CustomTextFieldWithMask(
                 value = birthDate,
                 onValueChange = { birthDate = it },
@@ -65,7 +63,6 @@ fun AddPersonScreen(
 
             Spacer(modifier = Modifier.height(8.dp))
 
-            // CPF
             CustomTextField(
                 value = cpf,
                 onValueChange = { cpf = it },
@@ -74,7 +71,6 @@ fun AddPersonScreen(
 
             Spacer(modifier = Modifier.height(8.dp))
 
-            // Cidade
             CustomTextField(
                 value = city,
                 onValueChange = { city = it },
@@ -83,13 +79,12 @@ fun AddPersonScreen(
 
             Spacer(modifier = Modifier.height(16.dp))
 
-            // Exibe a foto atual ou a imagem padrão
             if (currentPhotoPath.isNotEmpty()) {
                 Image(
                     painter = rememberAsyncImagePainter(model = currentPhotoPath),
                     contentDescription = "User Photo",
                     contentScale = ContentScale.Crop,
-                    modifier = Modifier.size(150.dp)
+                    modifier = Modifier.size(250.dp)
                 )
             } else {
                 Image(
@@ -101,11 +96,10 @@ fun AddPersonScreen(
 
             Spacer(modifier = Modifier.height(8.dp))
 
-            // Botão de Seleção de Foto
             Button(
                 onClick = {
-                    // Função para selecionar uma nova foto e atualizar o estado
-                    selectPhoto("new_photo_path.jpg")  // Exemplo de caminho fictício, atualize isso ao selecionar a foto
+
+                    selectPhoto("new_photo_path.jpg")
                 },
                 modifier = Modifier.fillMaxWidth()
             ) {
@@ -114,7 +108,7 @@ fun AddPersonScreen(
 
             Spacer(modifier = Modifier.height(16.dp))
 
-            // Switch Ativo/Inativo
+
             Row(
                 verticalAlignment = Alignment.CenterVertically,
                 modifier = Modifier.fillMaxWidth()
@@ -126,7 +120,6 @@ fun AddPersonScreen(
 
             Spacer(modifier = Modifier.height(16.dp))
 
-            // Botão de Salvar
             Button(
                 onClick = {
                     val newPerson = Person(
@@ -136,10 +129,10 @@ fun AddPersonScreen(
                         cpf = cpf,
                         city = city,
                         isActive = isActive,
-                        photo = currentPhotoPath.ifEmpty { "" } // Salva o caminho da foto, ou vazio se não houver
+                        photo = currentPhotoPath.ifEmpty { "" }
                     )
                     onSave(newPerson)
-                    navController.navigate("list") // Navegar para a lista após salvar
+                    navController.navigate("list")
                 },
                 modifier = Modifier.fillMaxWidth()
             ) {
@@ -147,7 +140,6 @@ fun AddPersonScreen(
             }
         }
     }
-
 
     LaunchedEffect(Unit) {
         currentPhotoPath = ""
@@ -157,7 +149,6 @@ fun AddPersonScreen(
         city = ""
         isActive = true
     }
-
 
     LaunchedEffect(photoPath) {
         photoPath?.let {

@@ -44,7 +44,7 @@ fun PersonItem(
         }
         Spacer(modifier = Modifier.width(8.dp))
         Button(onClick = { onDeactivateClick(person) }) {
-            Text(if (person.isActive) "Deactivate" else "Reactivate")
+            Text(if (person.isActive) "Desativar" else "Reativar")
         }
     }
 }

@@ -75,6 +75,8 @@ fun AppNavHost(
                     person = it,
                     onSave = { updatedPerson ->
                         viewModel.updatePerson(updatedPerson)
+                        viewModel.getActivePersons()
+                        viewModel.getInactivePersons()
                         navController.navigate("list")
                     },
                     selectPhoto = { onSelectPhoto() },
@@ -82,5 +84,6 @@ fun AppNavHost(
                 )
             }
         }
+
     }
 }

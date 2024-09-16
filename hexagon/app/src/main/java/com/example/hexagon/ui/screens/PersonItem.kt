@@ -6,11 +6,10 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
-import coil.compose.rememberImagePainter
+import coil.compose.rememberAsyncImagePainter
 import com.example.hexagon.R
 import com.example.hexagon.data.model.Person
 
@@ -18,8 +17,9 @@ import com.example.hexagon.data.model.Person
 @Composable
 fun PersonItem(
     person: Person,
-    onItemClick: (Person) -> Unit,
-    onDeactivateClick: (Person) -> Unit
+    onPrimaryActionClick: (Person) -> Unit,
+    onSecondaryActionClick: (Person) -> Unit,
+    secondaryActionLabel: String
 ) {
     Card(
         shape = RoundedCornerShape(8.dp),
@@ -33,24 +33,21 @@ fun PersonItem(
                 .padding(16.dp)
                 .fillMaxWidth()
         ) {
-
             if (person.photo.isNotEmpty()) {
                 Image(
-                    painter = rememberImagePainter(person.photo),
+                    painter = rememberAsyncImagePainter(model = person.photo),
                     contentDescription = "User Photo",
                     contentScale = ContentScale.Crop,
                     modifier = Modifier
-                        .size(60.dp)
-                        .padding(end = 16.dp)
+                        .size(100.dp)
+                        .padding(end = 5.dp)
                 )
             } else {
                 Image(
                     painter = painterResource(id = R.drawable.baseline_person_24),
                     contentDescription = "Default User Icon",
                     contentScale = ContentScale.Crop,
-                    modifier = Modifier
-                        .size(60.dp)
-                        .padding(end = 16.dp)
+                    modifier = Modifier.size(60.dp)
                 )
             }
 
@@ -64,12 +61,12 @@ fun PersonItem(
             }
 
             Column {
-                Button(onClick = { onItemClick(person) }) {
-                    Text("Edit")
+                Button(onClick = { onPrimaryActionClick(person) }) {
+                    Text("Editar")
                 }
                 Spacer(modifier = Modifier.height(8.dp))
-                Button(onClick = { onDeactivateClick(person) }) {
-                    Text("Deactivate")
+                Button(onClick = { onSecondaryActionClick(person) }) {
+                    Text(secondaryActionLabel)
                 }
             }
         }
