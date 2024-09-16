@@ -25,18 +25,9 @@ fun AppNavHost(
                     navController.navigate("editPerson/${person.id}")
                 },
                 onDeactivateClick = { person ->
+                    // Aqui desativa e atualiza a lista
                     viewModel.updatePersonStatus(person.id, false)
                 }
-            )
-        }
-
-        composable("addPerson") {
-            AddOrEditPersonScreen(
-                navController = navController,
-                person = null,
-                onSave = { person -> viewModel.addPerson(person) },
-                selectPhoto = onSelectPhoto,
-                photoPath = photoPath
             )
         }
 
@@ -45,11 +36,28 @@ fun AppNavHost(
                 navController = navController,
                 persons = viewModel.inactivePersons.value ?: emptyList(),
                 onReactivateClick = { person ->
+                    // Aqui reativa e atualiza a lista
                     viewModel.updatePersonStatus(person.id, true)
                 },
                 onEditClick = { person ->
                     navController.navigate("editPerson/${person.id}")
                 }
+            )
+        }
+
+        // Defina a rota "addPerson"
+        composable("addPerson") {
+            AddOrEditPersonScreen(
+                navController = navController,
+                person = null,
+                onSave = { person ->
+                    // Adiciona pessoa ao banco de dados
+                    viewModel.addPerson(person)
+                    // Navega de volta à lista
+                    navController.navigateUp()
+                },
+                selectPhoto = onSelectPhoto,
+                photoPath = photoPath
             )
         }
 
@@ -62,7 +70,12 @@ fun AppNavHost(
                 AddOrEditPersonScreen(
                     navController = navController,
                     person = it,
-                    onSave = { updatedPerson -> viewModel.updatePerson(updatedPerson) },
+                    onSave = { updatedPerson ->
+                        // Atualiza a pessoa no banco de dados
+                        viewModel.updatePerson(updatedPerson)
+                        // Navega de volta à lista
+                        navController.navigateUp()
+                    },
                     selectPhoto = onSelectPhoto,
                     photoPath = photoPath
                 )

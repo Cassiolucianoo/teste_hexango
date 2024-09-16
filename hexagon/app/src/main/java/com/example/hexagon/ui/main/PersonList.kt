@@ -1,7 +1,6 @@
 package com.example.hexagon.ui.main
 
 import androidx.compose.foundation.layout.*
-
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material3.*
@@ -45,7 +44,7 @@ fun PersonItem(
         }
         Spacer(modifier = Modifier.width(8.dp))
         Button(onClick = { onDeactivateClick(person) }) {
-            Text("Deactivate")
+            Text(if (person.isActive) "Deactivate" else "Reactivate")
         }
     }
 }

@@ -6,13 +6,12 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.*
-import androidx.compose.runtime.Composable
+import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
-import coil.compose.rememberImagePainter
+import coil.compose.rememberAsyncImagePainter
 import com.example.hexagon.R
 import com.example.hexagon.data.model.Person
 import com.example.hexagon.utils.DateUtils.calculateAge
@@ -25,6 +24,9 @@ fun InactiveListScreen(
     onReactivateClick: (Person) -> Unit,
     onEditClick: (Person) -> Unit
 ) {
+    // Recoleta da lista quando uma pessoa é reativada
+    var currentPersons by remember { mutableStateOf(persons) }
+
     Scaffold(
         topBar = {
             TopAppBar(
@@ -37,8 +39,16 @@ fun InactiveListScreen(
                     .fillMaxSize()
                     .padding(paddingValues)
             ) {
-                items(persons) { person ->
-                    InactivePersonItem(person, onReactivateClick, onEditClick)
+                items(currentPersons) { person ->
+                    InactivePersonItem(
+                        person = person,
+                        onReactivateClick = {
+                            onReactivateClick(it)
+                            // Atualiza a lista removendo a pessoa reativada
+                            currentPersons = currentPersons.filter { p -> p.id != it.id }
+                        },
+                        onEditClick = onEditClick
+                    )
                 }
             }
         }
@@ -66,21 +76,17 @@ fun InactivePersonItem(
 
             if (person.photo.isNotEmpty()) {
                 Image(
-                    painter = rememberImagePainter(person.photo),
+                    painter = rememberAsyncImagePainter(model = person.photo),
                     contentDescription = "User Photo",
-                    contentScale = ContentScale.Crop,
                     modifier = Modifier
                         .size(60.dp)
                         .padding(end = 16.dp)
                 )
             } else {
                 Image(
-                    painter = painterResource(id = R.drawable.baseline_person_24), // Imagem padrão de usuário
+                    painter = painterResource(id = R.drawable.baseline_person_24),
                     contentDescription = "Default User Icon",
-                    contentScale = ContentScale.Crop,
-                    modifier = Modifier
-                        .size(60.dp)
-                        .padding(end = 16.dp)
+                    modifier = Modifier.size(60.dp)
                 )
             }
 

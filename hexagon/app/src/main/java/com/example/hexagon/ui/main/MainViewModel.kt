@@ -18,6 +18,7 @@ class MainViewModel(private val repository: PersonRepository) : ViewModel() {
 
     init {
         getActivePersons()
+        getInactivePersons()
     }
 
     fun getActivePersons() {
@@ -32,25 +33,25 @@ class MainViewModel(private val repository: PersonRepository) : ViewModel() {
         }
     }
 
+    fun updatePersonStatus(personId: Int, isActive: Boolean) {
+        viewModelScope.launch {
+            repository.updatePersonStatus(personId, isActive)
+            getActivePersons()  // Atualiza lista de pessoas ativas
+            getInactivePersons()  // Atualiza lista de pessoas inativas
+        }
+    }
     fun addPerson(person: Person) {
         viewModelScope.launch {
             repository.addPerson(person)
-            getActivePersons()
+            getActivePersons()  // Atualiza a lista de pessoas ativas
         }
     }
 
     fun updatePerson(person: Person) {
         viewModelScope.launch {
             repository.updatePerson(person)
-            getActivePersons()
+            getActivePersons()  // Atualiza a lista de pessoas ativas
         }
     }
 
-    fun updatePersonStatus(personId: Int, isActive: Boolean) {
-        viewModelScope.launch {
-            repository.updatePersonStatus(personId, isActive)
-            getActivePersons()
-            getInactivePersons()
-        }
-    }
 }
