@@ -13,11 +13,12 @@ import com.example.hexagon.ui.main.MainViewModel
 import com.example.hexagon.ui.main.MainViewModelFactory
 import com.example.hexagon.ui.theme.HexagonTheme
 import com.example.hexagon.data.repository.PersonRepository
+import com.example.hexagon.ui.components.TopAppBarWithMenu
 
 class MainActivity : ComponentActivity() {
 
     private val viewModel: MainViewModel by viewModels {
-        MainViewModelFactory(PersonRepository(applicationContext)) // Adiciona o ViewModelFactory
+        MainViewModelFactory(PersonRepository(applicationContext))
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -38,7 +39,11 @@ class MainActivity : ComponentActivity() {
 
         Scaffold(
             topBar = {
-                TopAppBar(title = { Text(text = "Hexagon App") })
+                // TopAppBar with Menu (Sanduíche)
+                TopAppBarWithMenu(
+                    onActiveClick = { navController.navigate("list") },
+                    onInactiveClick = { navController.navigate("inactiveList") }
+                )
             },
             content = { paddingValues ->
                 AppNavHost(

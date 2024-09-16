@@ -1,10 +1,8 @@
 package com.example.hexagon.ui.components
 
-
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.tooling.preview.Preview
 import com.example.hexagon.R
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -41,14 +39,5 @@ fun TopAppBarWithMenu(onActiveClick: () -> Unit, onInactiveClick: () -> Unit) {
                 )
             }
         }
-    )
-}
-
-@Preview(showBackground = true)
-@Composable
-fun PreviewTopAppBarWithMenu() {
-    TopAppBarWithMenu(
-        onActiveClick = { /* Handle Active List Click */ },
-        onInactiveClick = { /* Handle Inactive List Click */ }
     )
 }
