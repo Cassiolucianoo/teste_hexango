@@ -16,6 +16,11 @@ import coil.compose.rememberAsyncImagePainter
 import com.example.hexagon.R
 import com.example.hexagon.data.model.Person
 
+
+
+
+
+
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun EditPersonScreen(
@@ -25,14 +30,15 @@ fun EditPersonScreen(
     selectPhoto: () -> Unit,
     photoPath: String?
 ) {
+    // Mantém os valores iniciais do usuário
     var name by remember { mutableStateOf(person.name) }
     var birthDate by remember { mutableStateOf(person.birthDate) }
     var cpf by remember { mutableStateOf(person.cpf) }
     var city by remember { mutableStateOf(person.city) }
     var isActive by remember { mutableStateOf(person.isActive) }
 
-
-    var currentPhotoPath by remember { mutableStateOf(photoPath ?: person.photo) }
+    // Mantém o caminho da foto atual (ou usa a foto passada via parâmetro)
+    var currentPhotoPath by remember { mutableStateOf(person.photo) }
     val defaultPhoto = painterResource(id = R.drawable.baseline_person_24)
 
     Scaffold(
@@ -47,6 +53,7 @@ fun EditPersonScreen(
                 .padding(16.dp)
                 .verticalScroll(rememberScrollState())
         ) {
+            // Campo de nome
             CustomTextField(
                 value = name,
                 onValueChange = { name = it },
@@ -55,6 +62,7 @@ fun EditPersonScreen(
 
             Spacer(modifier = Modifier.height(8.dp))
 
+            // Campo de data de nascimento
             CustomTextFieldWithMask(
                 value = birthDate,
                 onValueChange = { birthDate = it },
@@ -63,6 +71,7 @@ fun EditPersonScreen(
 
             Spacer(modifier = Modifier.height(8.dp))
 
+            // Campo de CPF
             CustomTextField(
                 value = cpf,
                 onValueChange = { cpf = it },
@@ -71,6 +80,7 @@ fun EditPersonScreen(
 
             Spacer(modifier = Modifier.height(8.dp))
 
+            // Campo de cidade
             CustomTextField(
                 value = city,
                 onValueChange = { city = it },
@@ -79,6 +89,7 @@ fun EditPersonScreen(
 
             Spacer(modifier = Modifier.height(16.dp))
 
+            // Exibe a foto atual ou a imagem padrão
             if (currentPhotoPath.isNotEmpty()) {
                 Image(
                     painter = rememberAsyncImagePainter(model = currentPhotoPath),
@@ -96,10 +107,11 @@ fun EditPersonScreen(
 
             Spacer(modifier = Modifier.height(8.dp))
 
+            // Botão para selecionar uma nova foto
             Button(
                 onClick = {
+                    // Chama a função para selecionar uma nova foto
                     selectPhoto()
-                    currentPhotoPath = "new_photo_path.jpg"
                 },
                 modifier = Modifier.fillMaxWidth()
             ) {
@@ -108,6 +120,7 @@ fun EditPersonScreen(
 
             Spacer(modifier = Modifier.height(16.dp))
 
+            // Switch para marcar a pessoa como ativa/inativa
             Row(
                 verticalAlignment = Alignment.CenterVertically,
                 modifier = Modifier.fillMaxWidth()
@@ -119,6 +132,7 @@ fun EditPersonScreen(
 
             Spacer(modifier = Modifier.height(16.dp))
 
+            // Botão para salvar as alterações
             Button(
                 onClick = {
                     val updatedPerson = Person(
@@ -128,15 +142,32 @@ fun EditPersonScreen(
                         cpf = cpf,
                         city = city,
                         isActive = isActive,
-                        photo = currentPhotoPath.ifEmpty { person.photo }
+                        photo = currentPhotoPath.ifEmpty { person.photo } // Se o caminho da foto estiver vazio, mantém a foto antiga
                     )
                     onSave(updatedPerson)
-                    navController.navigate("list")
+                    navController.navigate("list") // Volta para a lista após salvar
                 },
                 modifier = Modifier.fillMaxWidth()
             ) {
                 Text("Salvar")
             }
         }
+    }
+
+    // Atualiza o caminho da foto em tempo real
+    LaunchedEffect(photoPath) {
+        photoPath?.let {
+            currentPhotoPath = it // Atualiza o caminho da foto quando uma nova foto é selecionada
+        }
+    }
+
+    // Atualiza os campos de edição quando a pessoa é alterada
+    LaunchedEffect(person) {
+        name = person.name
+        birthDate = person.birthDate
+        cpf = person.cpf
+        city = person.city
+        isActive = person.isActive
+        currentPhotoPath = person.photo // Reseta a foto quando a pessoa muda
     }
 }
