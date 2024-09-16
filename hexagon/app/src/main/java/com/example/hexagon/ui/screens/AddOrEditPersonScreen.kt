@@ -38,9 +38,10 @@ fun AddOrEditPersonScreen(
             modifier = Modifier
                 .fillMaxWidth()
                 .padding(paddingValues) // Garante que o conteúdo comece após o TopAppBar
-                .padding(16.dp) // Adiciona um padding interno para o conteúdo
+                .padding(16.dp)
                 .verticalScroll(rememberScrollState()) // Permite rolagem se o conteúdo for maior que a tela
         ) {
+            // Campo de Nome
             CustomTextField(
                 value = name,
                 onValueChange = { name = it },
@@ -49,7 +50,8 @@ fun AddOrEditPersonScreen(
 
             Spacer(modifier = Modifier.height(8.dp))
 
-            CustomTextField(
+            // Campo de Data de Nascimento com máscara
+            CustomTextFieldWithMask(
                 value = birthDate,
                 onValueChange = { birthDate = it },
                 label = "Data de Nascimento"
@@ -57,6 +59,7 @@ fun AddOrEditPersonScreen(
 
             Spacer(modifier = Modifier.height(8.dp))
 
+            // Campo de CPF
             CustomTextField(
                 value = cpf,
                 onValueChange = { cpf = it },
@@ -65,6 +68,7 @@ fun AddOrEditPersonScreen(
 
             Spacer(modifier = Modifier.height(8.dp))
 
+            // Campo de Cidade
             CustomTextField(
                 value = city,
                 onValueChange = { city = it },
@@ -73,6 +77,7 @@ fun AddOrEditPersonScreen(
 
             Spacer(modifier = Modifier.height(16.dp))
 
+            // Switch para Ativo/Inativo
             Row(
                 verticalAlignment = androidx.compose.ui.Alignment.CenterVertically,
                 modifier = Modifier.fillMaxWidth()
@@ -83,6 +88,7 @@ fun AddOrEditPersonScreen(
             }
 
             Spacer(modifier = Modifier.height(16.dp))
+
 
             Button(
                 onClick = {
@@ -104,6 +110,7 @@ fun AddOrEditPersonScreen(
             }
 
             Spacer(modifier = Modifier.height(16.dp))
+
 
             Button(
                 onClick = selectPhoto,
@@ -127,10 +134,10 @@ fun CustomTextField(
         onValueChange = onValueChange,
         modifier = Modifier
             .fillMaxWidth()
-            .border(1.dp, Color.Gray, shape = RoundedCornerShape(8.dp)),
+            .border(1.dp, MaterialTheme.colorScheme.primary, shape = RoundedCornerShape(8.dp)),
         shape = RoundedCornerShape(8.dp),
         colors = TextFieldDefaults.textFieldColors(
-            containerColor = Color.Transparent,
+            containerColor = MaterialTheme.colorScheme.surface,
             focusedIndicatorColor = Color.Transparent,
             unfocusedIndicatorColor = Color.Transparent
         ),

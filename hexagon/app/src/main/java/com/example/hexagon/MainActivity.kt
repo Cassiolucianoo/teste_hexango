@@ -39,7 +39,7 @@ class MainActivity : ComponentActivity() {
 
         Scaffold(
             topBar = {
-                // TopAppBar with Menu (Sanduíche)
+           
                 TopAppBarWithMenu(
                     onActiveClick = { navController.navigate("list") },
                     onInactiveClick = { navController.navigate("inactiveList") }
